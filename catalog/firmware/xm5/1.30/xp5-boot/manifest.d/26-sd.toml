@@ -1,0 +1,28 @@
+# SD slot 0, the UHS-I SDHCI host. The X-M5 driver addresses instance n at 0xff9b0000 + (n << 14):
+# 0x14bbbd4(n) sets bit 16 of the sd-interface selection word +0x1e0 and then reaches +0x1e4, the
+# words the X-E5 (0x014c6ae4) and X100VI (0x1492ed4) declare as sd-interface. The image's
+# constant loads put about 160 accesses in slot 0's UHS-I registers (+0x10..+0x124, +0x1e0/+0x1e4)
+# and only two in slot 1 (0xff9b403e), so only slot 0 is declared. The driver also carries
+# UHS-II PHY and port offsets (+0x2020..+0x2232); they are not declared until the boot reaches
+# them.
+#
+# Session assumptions, not camera measurements: protocol, transfer_ticks, clock_ticks, rca and
+# the SD card's responses; ram_bytes is the DMA limit, the top of the body's DRAM extent in
+# manifest.toml (0x68000000). No interrupt line is declared: the boot polls, and an asserted
+# interrupt refuses.
+[[device]]
+base = 0xff9b0000
+size = 0x1e0
+kind = "sdhci"
+[device.options.controller]
+base = 0xff9b0000
+protocol = "sdhc"
+transfer_ticks = 1000
+clock_ticks = 1000
+rca = 1
+ram_bytes = 0x68000000
+
+[[device]]
+base = 0xff9b01e0
+size = 8
+kind = "sd-interface"
