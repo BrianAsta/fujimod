@@ -1,0 +1,12 @@
+# SMAPH-H/OpenVG command renderer (the SoC's `renderer` block, the shared `renderer` model), as on
+# the X-T5, X100VI, X-H2 and X-E5. 0x16f496c sets the base word 0x2b987f8 to 0xff93c000 and
+# read-modify-writes, through 0x16f471c, +0x18c0, +0x10c0, +0x10c4 = 0xffffffff, +0x1800,
+# +0x1000, +0x1020 = 0, +0x1880, +0x10a0 = 0x12345678, +0x18c0, +0x10c4 = 0xfffffff0,
+# +0x1248 = 1, +0xc18, +0x1c = 0: the X-H2's 0x15e76d8 sequence. The driver attaches its handler
+# to interrupt descriptor 0x92 (0x16f4908, lookup 0x14b3384 over the table 0x1a66c60), whose row
+# 0x1a67580 names INTID 153 (0x99), the line the model raises. DMA latency and the pixmap
+# readback channel order are the model's assumptions, not camera measurements (UNVERIFIED).
+[[device]]
+base = 0xff93c000
+size = 0x3000
+kind = "renderer"
