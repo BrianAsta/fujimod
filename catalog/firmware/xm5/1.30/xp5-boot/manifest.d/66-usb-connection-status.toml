@@ -1,0 +1,8 @@
+# USB connection status word at 0xff90e300 (size 4), as on the X-E5, X-T5, X-H2, X-H2S and X100VI.
+# 0x1608974 reads it, latches bit 0 to 0x24540a8 and posts event 0x3047 while it is set, the shape
+# of the X-E5's 0x01617fd4 (bit 0 latched, event 0x3048). The disconnected default is a scenario
+# input (HARDWARE-ONLY).
+[[device]]
+base = 0xff90e300
+size = 4
+kind = "usb-connection-status"
