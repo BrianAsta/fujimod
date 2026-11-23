@@ -1,0 +1,35 @@
+# Display controllers 0 (0xff990000) and 1 (0xff9a0000), the shared `display` kind on the same
+# windows as the X-T5, X100VI, X-H2S and X-E5. The X-M5 image addresses both banks throughout
+# (about a thousand base loads each, from 0x8b78e4 and 0x8be530 on); 0x153ec0c reads bank 1's
+# +0x08, +0x50 and +0x54 into its display state. The scanout geometry comes from the registers
+# the stock code programs. The full 0x1000 aperture of each bank is INHERITED.
+[[device]]
+base = 0xff990000
+size = 0x1000
+kind = "display"
+[[device]]
+base = 0xff9a0000
+size = 0x1000
+kind = "display"
+
+# Panel pixel-clock PLLs, as on the X-E5: the table 0x1a6e578..0x1a6e584 lists 0xffa11000,
+# 0xffa12000, 0xffa13000 and 0xffa14000 in order (the X-E5's 0x1a6a570..0x1a6a57c). Declared
+# explicitly, they take these four banks from 21-clocks.toml's clock-banks envelope, so the
+# display model can compute each bank's pixel clock. Full aperture sizes and hardware response
+# timing are UNVERIFIED.
+[[device]]
+base = 0xffa11000
+size = 0x1000
+kind = "panel-pll"
+[[device]]
+base = 0xffa12000
+size = 0x1000
+kind = "panel-pll"
+[[device]]
+base = 0xffa13000
+size = 0x1000
+kind = "panel-pll"
+[[device]]
+base = 0xffa14000
+size = 0x1000
+kind = "panel-pll"
