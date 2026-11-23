@@ -1,0 +1,25 @@
+# SSP instance 4 at 0xff914000 (base = (instance + 0xff910) << 12 in 0x148a45c). The OS's
+# serial-port client table 0x1a63e28 (0x30-byte entries) gives instance 4 one client, entry 2:
+# chip select GPIO 12.7 (0x000c0007), mode 0 and 16-bit words, the select and format the X-T5 and
+# X-E5 boards give their audio codec. Entry 22 of the same table (instance 8, select 15.15) is
+# the power controller declared in 33-power-controller.toml. The 48 MHz source is the X-T5
+# board's, INHERITED and UNVERIFIED.
+#
+# The client is the audio driver next to the audio serial reset (0x159abf0): 0x159ac48, 0x159d1b8
+# and 0x159d458 open entry 2. One transaction under the select sends a 32-bit register address
+# as two words (high half first; bit 31, so 0x8000 in the first word, marks a read), a zero
+# turnaround word, then one data word, or two for addresses above 0x2fff (0x159ac48). That is
+# longer than the X-T5's command word and one data word, so the endpoint takes a burst
+# (data_words unset): it retains each write's words under the first address word. It is a
+# command/data register endpoint, not a model of the codec: a read is refused because the reply
+# is unknown.
+[[device]]
+base = 0xff914000
+size = 0x1000
+kind = "spi-controller"
+[device.options]
+source_hz = 48000000
+
+[[device.options.endpoints]]
+select = { port = 12, pin = 7, active_high = false }
+part = { kind = "serial-command-registers", bits = 16, mode = 0, read_flag = 0x8000, miso_high = false }
